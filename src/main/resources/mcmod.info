@@ -1,0 +1,15 @@
+[
+{
+  "modid": "hc",
+  "name": "Hexian Core",
+  "description": "Modding Utility for MisterPeModder's mods",
+  "credits": "The forge and MCP teams",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "logoFile": "assets/hc/textures/icon.png",
+  "url": "",
+  "updateUrl": "",
+  "authorList": [ "MisterPeModder" ],
+  "dependencies": [ "mod_MinecraftForge" ]
+}
+]
