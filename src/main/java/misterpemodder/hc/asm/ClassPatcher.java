@@ -104,7 +104,7 @@ public abstract class ClassPatcher {
 		
 	}
 	
-	protected interface IPatch {
+	protected static interface IPatch {
 		
 		public BiPredicate<Boolean, AbstractInsnNode> getNodePredicate();
 		

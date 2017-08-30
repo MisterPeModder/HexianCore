@@ -25,6 +25,7 @@ minecraft {
     
     runDir = "run"
     mappings = "snapshot_20161220"
+	makeObfSourceJar = false
 }
 
 

@@ -7,7 +7,7 @@
   "version": "${version}",
   "mcversion": "${mcversion}",
   "logoFile": "assets/hc/textures/icon.png",
-  "url": "",
+  "url": "https://minecraft.curseforge.com/projects/hexiancore",
   "updateUrl": "",
   "authorList": [ "MisterPeModder" ],
   "dependencies": [ "mod_MinecraftForge" ]
