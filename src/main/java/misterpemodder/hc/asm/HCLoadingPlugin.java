@@ -1,46 +1,20 @@
 package misterpemodder.hc.asm;
 
 import java.util.Map;
-import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.common.collect.ImmutableSet;
-
-import net.minecraft.launchwrapper.IClassTransformer;
+import misterpemodder.hc.HCRefs;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
-/**
- * A dual-implementation of {@link IClassTransformer} and {@link IFMLLoadingPlugin}
- * that facilitate the creation of core mods.
- */
-public abstract class HCLoadingPlugin implements IClassTransformer, IFMLLoadingPlugin {
+@IFMLLoadingPlugin.Name(HCRefs.MOD_NAME)
+@IFMLLoadingPlugin.MCVersion("1.10.2")
+@IFMLLoadingPlugin.SortingIndex(1001)
+public class HCLoadingPlugin implements IFMLLoadingPlugin{
 
 	public static boolean runtimeDeobfuscation = false;
-	private final ImmutableSet<ClassPatcher> classPatchers;
-	protected final Logger logger;
-	
-	/**
-	 * Return a set containing the class patchers of this loding plugin
-	 */
-	protected abstract Set<ClassPatcher> getClassPatchers();
-	
-	public HCLoadingPlugin() {
-		this.classPatchers = ImmutableSet.copyOf(getClassPatchers());
-		
-		String name;
-		try {
-			name = this.getClass().getAnnotation(IFMLLoadingPlugin.Name.class).value();
-		} catch (NullPointerException e){
-			name = this.getClass().getSimpleName();
-		}
-		this.logger = LogManager.getLogger("Hexian Core (" + name + ")");
-	}
 	
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[]{this.getClass().getName()};
+		return new String[]{};
 	}
 
 	@Override
@@ -61,16 +35,6 @@ public abstract class HCLoadingPlugin implements IClassTransformer, IFMLLoadingP
 	@Override
 	public String getAccessTransformerClass() {
 		return null;
-	}
-
-	@Override
-	public byte[] transform(String name, String transformedName, byte[] basicClass) {
-		for (ClassPatcher cp : this.classPatchers) {
-			if(cp.matches(transformedName)) {
-				return cp.makePatches(transformedName, basicClass, logger);
-			}
-		}
-		return basicClass;
 	}
 
 }
