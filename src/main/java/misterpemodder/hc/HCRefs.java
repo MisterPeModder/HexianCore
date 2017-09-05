@@ -6,5 +6,5 @@ public final class HCRefs {
 	public static final String MOD_NAME = "Hexian Core";
 	
 	public static final String MOD_VERSION = "1.0.2";
-	public static final String ACCEPTED_MC_VERSIONS = "[1.11.2]";
+	public static final String ACCEPTED_MC_VERSIONS = "[1.12.1]";
 }
