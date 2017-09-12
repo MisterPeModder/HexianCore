@@ -1,0 +1,9 @@
+#MISC
+tile.blockGeneric.name=Unammed Block
+tile.itemGeneric.name=Unammed Item
+item.hasNBT.desc=Has NBT data!
+hc.missingNo.name=MISSINGNO. (throw me away pls :3)
+
+#GUI
+gui.tab.main.name=Main
+gui.tab.playerInv.name=Inventory

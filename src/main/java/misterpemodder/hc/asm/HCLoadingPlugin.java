@@ -2,7 +2,7 @@ package misterpemodder.hc.asm;
 
 import java.util.Map;
 
-import misterpemodder.hc.HCRefs;
+import misterpemodder.hc.main.HCRefs;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.Name(HCRefs.MOD_NAME)

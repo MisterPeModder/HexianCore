@@ -1,0 +1,9 @@
+#Divers
+tile.blockGeneric.name=Bloc anonyme
+tile.itemGeneric.name=Objet anonyme
+item.hasNBT.desc=contient des données NBT!
+hc.missingNo.name=MISSINGNO. (jette-moi loin... §4TRES LOIN§f ok?)
+
+#Catégories interface
+gui.tab.main.name=Principal
+gui.tab.playerInv.name=Inventaire
