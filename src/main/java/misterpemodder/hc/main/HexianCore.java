@@ -42,7 +42,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 		version = HCRefs.MOD_VERSION,
 		acceptedMinecraftVersions = HCRefs.ACCEPTED_MC_VERSIONS,
 		acceptableRemoteVersions = "*",
-		dependencies = "required-after:forge@[13.20.1.2386,);"
+		dependencies = "required-after:forge@[13.20.1.2386,);",
+		updateJSON = HCRefs.UPDATE_JSON
 	)
 public class HexianCore extends AbstractMod {
 	

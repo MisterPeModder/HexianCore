@@ -7,6 +7,7 @@ public final class HCRefs {
 	
 	public static final String MOD_ID = "hc";
 	public static final String MOD_NAME = "Hexian Core";
+	public static final String UPDATE_JSON = "https://raw.githubusercontent.com/MisterPeModder44/HexianCore/HEAD/update.json";
 	
 	public static final String MOD_VERSION = "1.1.0";
 	public static final String ACCEPTED_MC_VERSIONS = "[1.11.2]";

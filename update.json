@@ -1,0 +1,9 @@
+{
+    "1.11.2": {
+        "1.1.0": "Added utilities for creating custom items, blocks, GUIs and more."
+    },
+    "homepage": "https://minecraft.curseforge.com/projects/hexiancore",
+    "promos": {
+        "1.11.2-latest": "1.1.0",
+    }
+}
