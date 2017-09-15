@@ -15,6 +15,7 @@ import baubles.api.cap.IBaublesItemHandler;
 import misterpemodder.hc.api.block.ILockable;
 import misterpemodder.hc.api.item.IItemLock;
 import misterpemodder.hc.main.HCRefs;
+import misterpemodder.hc.main.HexianCore;
 import misterpemodder.hc.main.client.gui.tabs.TabBase;
 import misterpemodder.hc.main.inventory.elements.ISyncedContainerElement;
 import misterpemodder.hc.main.inventory.slot.IHidableSlot;
@@ -272,7 +273,7 @@ public abstract class ContainerBase<TE extends TileEntityContainerBase> extends 
 					NBTTagCompound toSend = new NBTTagCompound();
 					toSend.setTag("element_data", ce.writeData(new NBTTagCompound()));
 					toSend.setInteger("element_id", i);
-					PacketHandler.sendTo(PacketHandler.SYNCED_CONTAINER_ELEMENTS, toSend, (EntityPlayerMP)player);
+					HexianCore.PACKET_HANDLER.sendTo(PacketHandler.SYNCED_CONTAINER_ELEMENTS, toSend, (EntityPlayerMP)player);
 				}
 				
 			}

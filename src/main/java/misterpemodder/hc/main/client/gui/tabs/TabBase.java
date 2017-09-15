@@ -10,11 +10,11 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
+import misterpemodder.hc.main.HexianCore;
 import misterpemodder.hc.main.client.gui.GuiContainerBase;
 import misterpemodder.hc.main.client.gui.RecipeClickableAreaHC;
 import misterpemodder.hc.main.inventory.ContainerBase;
 import misterpemodder.hc.main.inventory.slot.IHidableSlot;
-import misterpemodder.hc.main.network.packet.PacketHandler;
 import misterpemodder.hc.main.tileentity.TileEntityContainerBase;
 import misterpemodder.hc.main.utils.ResourceLocationHC;
 import net.minecraft.client.gui.GuiButton;
@@ -146,7 +146,7 @@ public abstract class TabBase<C extends ContainerBase<TE>, TE extends TileEntity
 		toSend.setString("tab_id", tabId);
 		toSend.setInteger("button_id", buttonId);
 		toSend.setTag("info", data);
-		PacketHandler.sendToServer(ButtonClickHandler.BUTTON_CLICK_HANDLER, toSend);
+		HexianCore.PACKET_HANDLER.sendToServer(ButtonClickHandler.BUTTON_CLICK_HANDLER, toSend);
 	}
 	
 	public void updateButtons() {}

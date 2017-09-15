@@ -5,6 +5,7 @@ package misterpemodder.hc.main;
 import org.apache.logging.log4j.Logger;
 
 import misterpemodder.hc.main.network.HexianNetworkWrapper;
+import misterpemodder.hc.main.network.packet.IPacketHandler;
 import misterpemodder.hc.main.network.packet.PacketClientToServer;
 import misterpemodder.hc.main.network.packet.PacketServerToClient;
 import misterpemodder.hc.main.network.proxy.ICommonProxy;
@@ -29,6 +30,8 @@ public abstract class AbstractMod {
 	public HexianNetworkWrapper getNetworkWrapper() {
 		return this.network;
 	}
+	
+	public abstract IPacketHandler getPacketHandler();
 
 	public void preInitialization(FMLPreInitializationEvent event) {
 		

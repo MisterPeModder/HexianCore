@@ -26,6 +26,7 @@ import misterpemodder.hc.main.apiimpl.capability.owner.CapabilityOwner;
 import misterpemodder.hc.main.client.gui.tabs.ButtonClickHandler;
 import misterpemodder.hc.main.compat.craftingtweaks.CraftingTweaksCompat;
 import misterpemodder.hc.main.network.HexianNetworkWrapper;
+import misterpemodder.hc.main.network.packet.IPacketHandler;
 import misterpemodder.hc.main.network.packet.PacketHandler;
 import misterpemodder.hc.main.network.proxy.CommonProxyHC;
 import net.minecraftforge.fml.common.Loader;
@@ -35,6 +36,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 @Mod(
 		modid = HCRefs.MOD_ID,
@@ -52,6 +54,17 @@ public class HexianCore extends AbstractMod {
 	
 	@SidedProxy(modId = HCRefs.MOD_ID, clientSide = HCRefs.CLIENT_PROXY_CLASS, serverSide = HCRefs.SERVER_PROXY_CLASS)
 	public static CommonProxyHC proxy;
+	
+	public static final IPacketHandler PACKET_HANDLER = new PacketHandler() {
+		@Override
+		protected SimpleNetworkWrapper getNetworkWrapper() {
+			return HexianCore.instance.getNetworkWrapper();
+		}
+	};
+	
+	public IPacketHandler getPacketHandler() {
+		return PACKET_HANDLER;
+	}
 
 	@Override
 	public CommonProxyHC getProxy() {

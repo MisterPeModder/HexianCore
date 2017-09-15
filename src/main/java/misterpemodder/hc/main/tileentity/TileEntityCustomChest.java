@@ -2,6 +2,7 @@ package misterpemodder.hc.main.tileentity;
 
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
+import misterpemodder.hc.main.HexianCore;
 import misterpemodder.hc.main.apiimpl.capability.owner.CapabilityOwner;
 import misterpemodder.hc.main.apiimpl.capability.owner.OwnerHandlerUUID;
 import misterpemodder.hc.main.blocks.properties.IWorldNameableModifiable;
@@ -111,7 +112,7 @@ public abstract class TileEntityCustomChest extends TileEntityContainerBase impl
 			NBTTagCompound toSend = new NBTTagCompound();
 			toSend.setLong("pos", this.pos.toLong());
 			toSend.setInteger("numPlayersUsing", this.numPlayersUsing);
-			PacketHandler.sendToAllAround(PacketHandler.CHEST_UPDATE_HANDLER, toSend, target);
+			HexianCore.PACKET_HANDLER.sendToAllAround(PacketHandler.CHEST_UPDATE_HANDLER, toSend, target);
 		}
 	}
 	

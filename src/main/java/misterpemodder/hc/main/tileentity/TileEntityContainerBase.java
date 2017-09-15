@@ -1,5 +1,6 @@
 package misterpemodder.hc.main.tileentity;
 
+import misterpemodder.hc.main.HexianCore;
 import misterpemodder.hc.main.network.packet.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,11 +33,11 @@ public abstract class TileEntityContainerBase extends TileEntity {
 		if(!this.world.isRemote) {
 			NetworkRegistry.TargetPoint target = new TargetPoint(this.world.provider.getDimension(), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 64);
 			toSend.setTag("tileEntity", this.serializeNBT());
-			PacketHandler.sendToAllAround(PacketHandler.TE_UPDATE_HANDLER, toSend, target);
+			HexianCore.PACKET_HANDLER.sendToAllAround(PacketHandler.TE_UPDATE_HANDLER, toSend, target);
 		} else {
 			toSend.setInteger("world_dim_id", world.provider.getDimension());
 			toSend.setTag("player_id", NBTUtil.createUUIDTag(Minecraft.getMinecraft().player.getUniqueID()));
-			PacketHandler.sendToServer(PacketHandler.TE_UPDATE_REQUEST_HANDLER, toSend);
+			HexianCore.PACKET_HANDLER.sendToServer(PacketHandler.TE_UPDATE_REQUEST_HANDLER, toSend);
 		}
 	}
 	

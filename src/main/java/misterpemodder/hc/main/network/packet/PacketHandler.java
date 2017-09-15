@@ -4,14 +4,11 @@ import java.util.UUID;
 
 import com.google.common.collect.ImmutableList;
 
-import misterpemodder.hc.main.AbstractMod;
 import misterpemodder.hc.main.HexianCore;
 import misterpemodder.hc.main.inventory.ContainerBase;
 import misterpemodder.hc.main.inventory.elements.ISyncedContainerElement;
-import misterpemodder.hc.main.network.HexianNetworkWrapper;
 import misterpemodder.hc.main.network.IPacketDataHandler;
 import misterpemodder.hc.main.tileentity.TileEntityCustomChest;
-import misterpemodder.hc.main.utils.ModUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,10 +22,11 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public final class PacketHandler {
+public abstract class PacketHandler implements IPacketHandler {
 	
 	/**
 	 * <p> Handler type: server to client
@@ -73,8 +71,7 @@ public final class PacketHandler {
 			toSend.setLong("pos", pos.toLong());
 			toSend.setTag("tileEntity", te.serializeNBT());
 			
-			PacketHandler.sendTo(PacketHandler.TE_UPDATE_HANDLER, toSend, (EntityPlayerMP)player);
-			
+			HexianCore.PACKET_HANDLER.sendTo(PacketHandler.TE_UPDATE_HANDLER, toSend, (EntityPlayerMP)player);
 		}
 	};
 	
@@ -122,7 +119,11 @@ public final class PacketHandler {
 			}
 		}
 	};
- 
+	
+	
+	protected abstract SimpleNetworkWrapper getNetworkWrapper();
+	
+	
 	public static void registerPacketHandlers(IPacketDataHandler... handlers) {
 		if(handlers.length > 0)
 			for(IPacketDataHandler handler : handlers) {
@@ -130,34 +131,29 @@ public final class PacketHandler {
 			}
 	}
 	
-	private static HexianNetworkWrapper getNetworkWrapper() {
-		AbstractMod mod = ModUtils.getCurrentModInstance();
-		if(mod != null) {
-			HexianNetworkWrapper net = mod.getNetworkWrapper();
-			if(net != null)
-				return net;
-		}
-		return HexianCore.instance.getNetworkWrapper();
-	}
-	
-	public static void sendTo(IPacketDataHandler handler, NBTTagCompound data, EntityPlayerMP player) {
+	@Override
+	public void sendTo(IPacketDataHandler handler, NBTTagCompound data, EntityPlayerMP player) {
 		getNetworkWrapper().sendTo(new PacketServerToClient(handler, data), player);
 	}
 	
-	public static void sendToAll(IPacketDataHandler handler, NBTTagCompound data) {
+	@Override
+	public void sendToAll(IPacketDataHandler handler, NBTTagCompound data) {
 		getNetworkWrapper().sendToAll(new PacketServerToClient(handler, data));
 	}
 	
-	public static void sendToAllAround(IPacketDataHandler handler, NBTTagCompound data, TargetPoint target) {
+	@Override
+	public void sendToAllAround(IPacketDataHandler handler, NBTTagCompound data, TargetPoint target) {
 		getNetworkWrapper().sendToAllAround(new PacketServerToClient(handler, data), target);
 	}
 	
-	public static void sendToDimension(IPacketDataHandler handler, NBTTagCompound data, int dimId) {
+	@Override
+	public void sendToDimension(IPacketDataHandler handler, NBTTagCompound data, int dimId) {
 		getNetworkWrapper().sendToDimension(new PacketServerToClient(handler, data), dimId);
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public static void sendToServer(IPacketDataHandler handler, NBTTagCompound data) {
+	@Override
+	public void sendToServer(IPacketDataHandler handler, NBTTagCompound data) {
 		getNetworkWrapper().sendToServer(new PacketClientToServer(handler, data));
 	}
 	
