@@ -12,7 +12,9 @@ import net.minecraftforge.fml.common.ModContainer;
 public final class ModUtils {
 	
 	/**
-	 * A shortcut method for {@link Loader}{@code .instance().activeModContainer()}
+	 * A shortcut method for {@link Loader#activeModContainer()}
+	 * 
+	 * @return The active mod container.
 	 */
 	public static ModContainer activeModContainer() {
 		return Loader.instance().activeModContainer();
@@ -20,6 +22,8 @@ public final class ModUtils {
 	
 	/**
 	 * Checks if the active mod container contains an AbstractMod instance.
+	 * 
+	 * @return True if it contains an AbstractMod instance, false otherwise.
 	 */
 	public static boolean isHexianMod() {
 		return isHexianMod(activeModContainer());
@@ -27,9 +31,13 @@ public final class ModUtils {
 	
 	/**
 	 * Checks if this mod container contains an AbstractMod instance.
+	 * 	 
+	 * @param container - The {@link ModContainer} instance.
+	 * 
+	 * @return True if it contains an AbstractMod instance, false otherwise.
 	 */
-	public static boolean isHexianMod(ModContainer mod) {
-		return mod.getMod() instanceof AbstractMod;
+	public static boolean isHexianMod(ModContainer container) {
+		return container.getMod() instanceof AbstractMod;
 	}
 	
 	/**
@@ -46,7 +54,11 @@ public final class ModUtils {
 	/**
 	 * Retrieves the AbstractMod instance from a mod container.
 	 * Note: this method does NOT check if the given ModContainer instance conatains an AbstractMod,
-	 * if you use this method, please check with {@link ModUtils}.isHexianMod(container) before.
+	 * if you use this method, please check with {@link ModUtils#isHexianMod(ModContainer)} before.
+	 * 
+	 * @param container - The {@link ModContainer} instance.
+	 * 
+	 * @return The {@link AbstractMod} instance.
 	 */
 	public static AbstractMod getHexianMod(ModContainer container) {
 		return ((AbstractMod)container.getMod());
@@ -55,6 +67,10 @@ public final class ModUtils {
 	/**
 	 * Retrieves the AbstractMod instance from a mod container.
 	 * This method is the safe version of {@link ModUtils}.getHexianMod(container).
+	 * 
+	 * @param container - The {@link ModContainer} instance.
+	 * 
+	 * @return The {@link AbstractMod} instance.
 	 */
 	@Nullable
 	public static AbstractMod getHexianModChecked(ModContainer container) {

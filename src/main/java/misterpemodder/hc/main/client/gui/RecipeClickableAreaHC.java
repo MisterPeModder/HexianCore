@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraftforge.fml.client.config.HoverChecker;
 
 /**
- * This class is a copy of {@link mezz.jei.gui.recipes.RecipeClickableArea} from JEI,
+ * This class is a copy of RecipeClickableArea from JEI,
  * This has been done to avoid crash issues when JEI is not present,
  * I do not claim this class as my own.
  */

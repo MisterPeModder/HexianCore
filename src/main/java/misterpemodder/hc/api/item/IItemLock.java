@@ -21,7 +21,7 @@ public interface IItemLock {
      * This can be used to decrease durability or for other purposes.
      *
      * @param lockStack - The ItemStack that is being exploded.
-     * @param random
+     * @param random - RNG.
      * @return EnumActionResult.SUCCES if the lock has been broken,
      *         EnumActionResult.FAIL or PASS if not.
      */
@@ -31,8 +31,8 @@ public interface IItemLock {
 	 * Called after the lock has been broken.
 	 * This can be used to warn the owner his block has been unlocked or for other purposes.
 	 * 
-	 * @param world
-	 * @param pos
+	 * @param world The world that this item is in.
+	 * @param pos The BlockPos of the block this item is in.
 	 * @param entity - The entity that has triggered the explosion, if there is one.
 	 */
 	void onLockBroken(World world, BlockPos pos, @Nullable EntityLivingBase entity);

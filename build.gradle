@@ -71,8 +71,11 @@ task apiJar(type: Jar) {
     include 'misterpemodder/hc/api/**'
 }
 
-task javadocJar(type: Jar) {
-	include 'misterpemodder/hc/**'
+javadoc {
+    include 'misterpemodder/hc/**'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
     from 'build/docs/javadoc'
     classifier 'javadoc'
 }

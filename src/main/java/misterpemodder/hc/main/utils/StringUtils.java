@@ -34,6 +34,11 @@ public class StringUtils {
 	
 	/**
 	 * Translate lang keys.
+	 * 
+	 * @param translateKey - The unlocalized string.
+	 * @param params - Optionnal params.
+	 * 
+	 * @return The string corresponding to the given key in the current locale.
 	 */
 	public static String translate(String translateKey, Object... params) {
 		return HexianCore.proxy.translate(translateKey, params);

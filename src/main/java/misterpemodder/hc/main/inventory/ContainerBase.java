@@ -145,6 +145,9 @@ public abstract class ContainerBase<TE extends TileEntityContainerBase> extends 
 	
 	/**
 	 * Use this method to add synced container elements to the list.
+	 * 
+	 * @param elements - A list containing all the elements to be added.
+	 * @return The elements list. 
 	 */
 	protected List<ISyncedContainerElement> addContainerElements(List<ISyncedContainerElement> elements) {
 		return elements;

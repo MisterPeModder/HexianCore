@@ -5,9 +5,6 @@ package misterpemodder.hc.main.network.proxy;
  */
 public abstract class CommonProxyHC implements ICommonProxy {
 	
-	/**
-	 * Use StringUtils.translate instead.
-	 */
 	@Deprecated
 	public abstract String translate(String translateKey, Object... params);
 

@@ -20,6 +20,8 @@ public abstract class HCClassTransformer implements IClassTransformer {
 	
 	/**
 	 * Return a set containing the class patchers of this loding plugin
+	 * 
+	 * @return A set containing all the class patcher of this class transformer.
 	 */
 	protected abstract Set<ClassPatcher> getClassPatchers();
 	

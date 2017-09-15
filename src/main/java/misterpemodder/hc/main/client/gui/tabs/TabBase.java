@@ -61,20 +61,25 @@ public abstract class TabBase<C extends ContainerBase<TE>, TE extends TileEntity
 	 * It is recommended to format your tab id like this:
 	 * {@code <modId>.<tabId>}. If this tab is a main tab then it should be formated like this:
 	 * {@code <modId>.main.<tabId>}	 
+	 * 
+	 * @return The uid.
 	 */
 	public abstract String getTabID();
 	
 	public abstract String getUnlocalizedName();
 	
 	/**
-	 * Returns the ItemStack to be used as the tab's icon.
+	 * @return The ItemStack to be used as the tab's icon.
 	 */
 	public abstract ItemStack getItemStack();
 	
 	public abstract TabTexture getTabTexture();
 	
 	/**
-	 * This methods determines if the given {@IHidableSlot} should be displayed.
+	 * This methods determines if the given {@link IHidableSlot} should be displayed.
+	 * 
+	 * @param slot - The hidable slot.
+	 * @return True if this slot should be displayed, false otherwise.
 	 */
 	public abstract boolean shouldDisplaySlot(IHidableSlot slot);
 	
@@ -112,6 +117,9 @@ public abstract class TabBase<C extends ContainerBase<TE>, TE extends TileEntity
 	
 	/**
 	 * Use this method to initialize your buttons.
+	 * 
+	 * @param topX - The x coordinate of the top-left corner of this tab.
+	 * @param topY - The y coordinate of the top-left corner of this tab.
 	 */
 	public void initButtons(int topX, int topY) {}
 	
