@@ -1,4 +1,4 @@
-package misterpemodder.hc.main.capabilty;
+package misterpemodder.hc.main.capabilty.item;
 
 import misterpemodder.hc.main.tileentity.TileEntityContainerBase;
 import net.minecraftforge.items.ItemStackHandler;

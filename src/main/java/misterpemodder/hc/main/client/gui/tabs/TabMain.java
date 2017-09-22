@@ -2,7 +2,7 @@ package misterpemodder.hc.main.client.gui.tabs;
 
 import misterpemodder.hc.main.inventory.ContainerBase;
 import misterpemodder.hc.main.inventory.slot.IHidableSlot;
-import misterpemodder.hc.main.inventory.slot.SlotHidable;
+import misterpemodder.hc.main.inventory.slot.SlotDisableable;
 import misterpemodder.hc.main.tileentity.TileEntityContainerBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IWorldNameable;
@@ -48,7 +48,7 @@ public abstract class TabMain<C extends ContainerBase<TE>, TE extends TileEntity
 	}
 	
 	public boolean shouldDisplaySlot(IHidableSlot slot) {
-		return slot instanceof SlotHidable && ((SlotHidable)slot).getItemHandler() == this.guiContainer.container.getTileEntity().getInventory();
+		return slot instanceof SlotDisableable && ((SlotDisableable)slot).getItemHandler() == this.guiContainer.container.getTileEntity().getInventory();
 	}
 	
 	@Override

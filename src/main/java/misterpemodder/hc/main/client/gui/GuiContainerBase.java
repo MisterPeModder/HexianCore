@@ -31,6 +31,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 public abstract class GuiContainerBase<C extends ContainerBase<TE>, TE extends TileEntityContainerBase> extends GuiContainer {
@@ -61,8 +62,8 @@ public abstract class GuiContainerBase<C extends ContainerBase<TE>, TE extends T
 		Pair<TabBase<C, TE>, TabBase<C, TE>> p = getDefaultPair();
         this.selectedTabs = MutablePair.of(p.getLeft(), p.getRight());
         
-        Dimension dl = selectedTabs.left.getTabTexture().dim;
-		Dimension dr = selectedTabs.right.getTabTexture().dim;
+        Dimension dl = selectedTabs.left.getTexture().dim;
+		Dimension dr = selectedTabs.right.getTexture().dim;
         this.xSize = (Math.max(dl.width, dr.width) + TabBase.WIDTH);
       	this.ySize = dl.height + dr.height;
       	
@@ -128,12 +129,12 @@ public abstract class GuiContainerBase<C extends ContainerBase<TE>, TE extends T
 	    this.drawDisabledTabs();
 	    
 		//Top Part
-	    TabTexture lt = selectedTabs.getLeft().getTabTexture();
+	    TabTexture lt = selectedTabs.getLeft().getTexture();
 		this.mc.getTextureManager().bindTexture(lt.screenTexture);
 		Gui.drawModalRectWithCustomSizedTexture(this.guiLeft, this.guiTop, 0, 0, lt.dim.width, lt.dim.height, lt.textureSize.width, lt.textureSize.height);
 		
 		//Bottom part
-		TabTexture rt = selectedTabs.getRight().getTabTexture();
+		TabTexture rt = selectedTabs.getRight().getTexture();
 	    this.mc.getTextureManager().bindTexture(rt.screenTexture);
 	    Gui.drawModalRectWithCustomSizedTexture(this.guiLeft, getBottomPartPos(), 0, 0, rt.dim.width, rt.dim.height, rt.textureSize.width, rt.textureSize.height);
 		
@@ -147,10 +148,10 @@ public abstract class GuiContainerBase<C extends ContainerBase<TE>, TE extends T
 	}
 	
 	protected void drawTab(TabBase<C, TE> tab, boolean enabled) {
-		TabTexture texture = tab.getTabTexture();
+		TabTexture texture = tab.getTexture();
 		Point uv = enabled? texture.enabledCoords : texture.disabledCoords;
 		Point coords = tab.getPos();
-		this.mc.getTextureManager().bindTexture(tab.getTabTexture().tabTexture);
+		this.mc.getTextureManager().bindTexture(tab.getTexture().tabTexture);
 		Gui.drawModalRectWithCustomSizedTexture(this.getGuiLeft()+coords.x , this.getGuiTop()+coords.y, uv.x, uv.y, TabBase.WIDTH, TabBase.HEIGHT, 128F, 128F);
 	}
 	
@@ -173,7 +174,7 @@ public abstract class GuiContainerBase<C extends ContainerBase<TE>, TE extends T
 		    RenderHelper.disableStandardItemLighting();
 		    if(isPointInRegion(tab.getPos().x+1, tab.getPos().y, TabBase.WIDTH, TabBase.HEIGHT-1, mouseX, mouseY)) {
 		    	flag = false;
-		    	addHoveringText(StringUtils.translate(tab.getUnlocalizedName()));
+		    	addHoveringText(TextFormatting.GRAY + "" + TextFormatting.ITALIC + StringUtils.translate(tab.getUnlocalizedName()));
 		    }
 	    }
 	    
@@ -215,7 +216,7 @@ public abstract class GuiContainerBase<C extends ContainerBase<TE>, TE extends T
 		for(TabBase<C, TE> tab : tabs) {
 			Point pos = tab.getPos();
 			if(isPointInRegion(pos.x+1, pos.y, TabBase.WIDTH, TabBase.HEIGHT-1, mouseX, mouseY)) {
-				if(selectedTabs.getLeft() != tab && selectedTabs.getRight() != tab) {
+				if(tab.isEnabled() && selectedTabs.getLeft() != tab && selectedTabs.getRight() != tab) {
 					this.mc.player.playSound(SoundEvents.UI_BUTTON_CLICK, 1.0F, 1.0F);
 					TabPos tabPos = tab.getTabPos();
 					if(tabPos == TabPos.TOP_LEFT || tabPos == TabPos.TOP_RIGHT) {
@@ -253,6 +254,10 @@ public abstract class GuiContainerBase<C extends ContainerBase<TE>, TE extends T
         	this.onGuiClosed();
         	this.mc.player.closeScreen();
         }
+    }
+	
+    public boolean isPointInTheRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
+    	return this.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
     }
 	
 	@Override
@@ -352,7 +357,7 @@ public abstract class GuiContainerBase<C extends ContainerBase<TE>, TE extends T
 	}
 	
 	public int getBottomPartPos() {
-		return this.getGuiTop() + selectedTabs.getLeft().getTabTexture().dim.height;
+		return this.getGuiTop() + selectedTabs.getLeft().getTexture().dim.height;
 	}
 	
 	protected void drawDisabledTabs() {

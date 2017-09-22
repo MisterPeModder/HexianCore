@@ -36,10 +36,7 @@ public abstract class TabBase<C extends ContainerBase<TE>, TE extends TileEntity
 	
 	//tab ids
 	public static final String INFO_TAB_ID = "hc.info";
-	public static final String IO_TAB_ID = "hc.io";
 	public static final String MISC_TAB_ID = "hc.misc";
-	public static final String SECURITY_TAB_ID = "hc.security";
-	public static final String REDSTONE_TAB_ID = "hc.redstone";
 	public static final String PLAYER_INV_TAB_ID = "hc.playerInv";
 	public static final String ARMOR_INV_TAB_ID = "hc.armorInv";
 	
@@ -50,6 +47,7 @@ public abstract class TabBase<C extends ContainerBase<TE>, TE extends TileEntity
 	protected TabPos pos;
 	protected GuiContainerBase<C, TE> guiContainer;
 	protected List<GuiButton> buttons;
+	private boolean enabled;
 	
 	protected TabBase(TabPos pos) {
 		this.pos = pos;
@@ -73,7 +71,24 @@ public abstract class TabBase<C extends ContainerBase<TE>, TE extends TileEntity
 	 */
 	public abstract ItemStack getItemStack();
 	
-	public abstract TabTexture getTabTexture();
+	protected abstract TabTexture getTabTexture();
+	
+	protected TabTexture getDisabledTabTexture() {
+		return this.getTabTexture();
+	}
+	
+	public boolean isEnabled() {
+		return this.enabled;
+	}
+	
+	public TabBase<C, TE> setEnabled(boolean enable) {
+		this.enabled = enable;
+		return this;
+	}
+	
+	public TabTexture getTexture() {
+		return this.isEnabled()? getTabTexture() : getDisabledTabTexture();
+	}
 	
 	/**
 	 * This methods determines if the given {@link IHidableSlot} should be displayed.
@@ -176,6 +191,14 @@ public abstract class TabBase<C extends ContainerBase<TE>, TE extends TileEntity
 		public final Point disabledCoords;
 		public final Dimension dim;
 		public final Dimension textureSize;
+		
+		public TabTexture(ResourceLocation screenTexture) {
+			this(screenTexture, new Dimension(212, 100), null);
+		}
+		
+		public TabTexture(ResourceLocation screenTexture, Dimension dim, Dimension textureSize) {
+			this(DEFAULT_TAB_LOCATION, new Point(0,0), new Point(32, 0), screenTexture, dim, textureSize);
+		}
 		
 		public TabTexture(ResourceLocation tabTexture, Point enabledCoords, Point disabledCoords, ResourceLocation screenTexture, Dimension dim) {
 			this(tabTexture, enabledCoords, disabledCoords, screenTexture, dim, null);

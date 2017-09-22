@@ -1,11 +1,8 @@
 package misterpemodder.hc.main.client.gui.tabs;
 
-import java.awt.Dimension;
-import java.awt.Point;
-
 import misterpemodder.hc.main.inventory.ContainerBase;
 import misterpemodder.hc.main.inventory.slot.IHidableSlot;
-import misterpemodder.hc.main.inventory.slot.SlotHidable;
+import misterpemodder.hc.main.inventory.slot.SlotDisableable;
 import misterpemodder.hc.main.tileentity.TileEntityContainerBase;
 import misterpemodder.hc.main.utils.ResourceLocationHC;
 import net.minecraft.init.Blocks;
@@ -29,7 +26,7 @@ public class TabPlayerInventory<C extends ContainerBase<TE>, TE extends TileEnti
 	}
 	
 	public boolean shouldDisplaySlot(IHidableSlot slot) {
-		return slot instanceof SlotHidable && ((SlotHidable)slot).getItemHandler() == this.guiContainer.container.getPlayerInv();
+		return slot instanceof SlotDisableable && ((SlotDisableable)slot).getItemHandler() == this.guiContainer.container.getPlayerInv();
 	}
 
 	@Override
@@ -44,7 +41,7 @@ public class TabPlayerInventory<C extends ContainerBase<TE>, TE extends TileEnti
 
 	@Override
 	public TabTexture getTabTexture() {
-		return new TabTexture(DEFAULT_TAB_LOCATION, new Point(0,0), new Point(32, 0), new ResourceLocationHC("textures/gui/container/player_inventory.png"), new Dimension(212, 100));
+		return new TabTexture(new ResourceLocationHC("textures/gui/container/player_inventory.png"));
 	}
 
 }

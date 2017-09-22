@@ -7,7 +7,7 @@ import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import misterpemodder.hc.main.client.gui.RecipeClickableAreaHC;
 import misterpemodder.hc.main.inventory.ContainerBase;
 import misterpemodder.hc.main.inventory.slot.IHidableSlot;
-import misterpemodder.hc.main.inventory.slot.SlotHidable;
+import misterpemodder.hc.main.inventory.slot.SlotDisableable;
 import misterpemodder.hc.main.tileentity.TileEntityContainerBase;
 import misterpemodder.hc.main.utils.ResourceLocationHC;
 import misterpemodder.hc.main.utils.StringUtils;
@@ -47,7 +47,7 @@ public class TabArmorInventory<C extends ContainerBase<TE>, TE extends TileEntit
 	public boolean shouldDisplaySlot(IHidableSlot slot) {
 		C container = getContainer();
 		if(slot instanceof SlotItemHandler) {
-			IItemHandler h = ((SlotHidable)slot).getItemHandler();
+			IItemHandler h = ((SlotDisableable)slot).getItemHandler();
 			boolean flag1 = h == container.getPlayerOffandInv() || h == container.getPlayerArmorInv();
 			boolean flag2 = h == container.baublesInv;
 			return flag1 || flag2;

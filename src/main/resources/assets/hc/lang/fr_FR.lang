@@ -7,3 +7,6 @@ hc.missingNo.name=MISSINGNO. (jette-moi loin... §4TRES LOIN§f ok?)
 #Catégories interface
 gui.tab.main.name=Principal
 gui.tab.playerInv.name=Inventaire
+
+#Sécurité
+protectedBlock.noBreaking=Vous n'avez pas les permissions pour casser ce(tte) %s!

@@ -7,3 +7,6 @@ hc.missingNo.name=MISSINGNO. (throw me away pls :3)
 #GUI
 gui.tab.main.name=Main
 gui.tab.playerInv.name=Inventory
+
+#Security
+protectedBlock.noBreaking=You don't have the permissions to break this %s!

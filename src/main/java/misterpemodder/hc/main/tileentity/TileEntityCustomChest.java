@@ -2,14 +2,18 @@ package misterpemodder.hc.main.tileentity;
 
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
+import misterpemodder.hc.api.block.ILockable;
 import misterpemodder.hc.main.HexianCore;
 import misterpemodder.hc.main.apiimpl.capability.owner.CapabilityOwner;
 import misterpemodder.hc.main.apiimpl.capability.owner.OwnerHandlerUUID;
+import misterpemodder.hc.main.blocks.BlockCustomChest;
 import misterpemodder.hc.main.blocks.properties.IWorldNameableModifiable;
-import misterpemodder.hc.main.capabilty.SyncedItemHandler;
+import misterpemodder.hc.main.capabilty.item.ItemStackHandlerLockable;
+import misterpemodder.hc.main.capabilty.item.SyncedItemHandler;
 import misterpemodder.hc.main.network.packet.PacketHandler;
 import misterpemodder.hc.main.utils.StringUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -20,17 +24,20 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 /**
  * Shared code for TMO Titanium chests and AC Adujstable chests.
  */
-public abstract class TileEntityCustomChest extends TileEntityContainerBase implements ITickable, IWorldNameableModifiable {
+public abstract class TileEntityCustomChest extends TileEntityContainerBase implements ITickable, IWorldNameableModifiable, ILockable{
 
+	protected boolean locked = false;
+	public static final int MAX_UPDATE_TIME = 200;
+	public int ticksSinceUpdate;
+	
 	protected ItemStackHandler inventory;
+	protected ItemStackHandler lock;
 	protected OwnerHandlerUUID ownerHandler = new OwnerHandlerUUID();
 	protected String customName;
 	
@@ -41,14 +48,36 @@ public abstract class TileEntityCustomChest extends TileEntityContainerBase impl
     public TileEntityCustomChest() {
     	super();
     	this.inventory = new SyncedItemHandler(this, getInventorySize());
+    	this.lock = new ItemStackHandlerLockable(this, 1);
 	}
     
     public abstract int getInventorySize();
     
 	@Override
+    public void onInvOpen(EntityPlayer player) {
+        if (!player.isSpectator()) {
+            if (this.numPlayersUsing < 0) {
+                this.numPlayersUsing = 0;
+            }
+            if(!player.getEntityWorld().isRemote)
+            	this.syncPlayerUsingNum(1);
+        }
+    }
+	
+	@Override
+    public void onInvClose(EntityPlayer player) {
+        if (!player.isSpectator() && this.getBlockType() instanceof BlockCustomChest) {
+        	if(!player.getEntityWorld().isRemote)
+        		this.syncPlayerUsingNum(-1);
+        }
+    }
+    
+	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setTag("inventory", inventory.serializeNBT());
 		compound.setTag("owner", ownerHandler.serializeNBT());
+		compound.setBoolean("locked", locked);
+		
 		if (this.hasCustomName()) {
 			compound.setString("customName", customName);
         }
@@ -59,6 +88,7 @@ public abstract class TileEntityCustomChest extends TileEntityContainerBase impl
 	public void readFromNBT(NBTTagCompound compound) {
 		this.inventory.deserializeNBT(compound.getCompoundTag("inventory"));
 		this.ownerHandler.deserializeNBT(compound.getCompoundTag("owner"));
+		this.locked = compound.getBoolean("locked");
 		
 		if(compound.hasKey("customName")) {
 			this.customName = compound.getString("customName");
@@ -116,15 +146,17 @@ public abstract class TileEntityCustomChest extends TileEntityContainerBase impl
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
-	protected void additionalClientUpdate() {}
-	
 	@Override
 	public void update() {
         
 		if (this.world.isRemote) {
 			
-			additionalClientUpdate();
+			if(ticksSinceUpdate >= MAX_UPDATE_TIME) {
+				ticksSinceUpdate = 0;
+				this.sync();
+			} else {
+				ticksSinceUpdate++;
+			}
 			
 			//Chest lid animation
 			this.prevLidAngle = this.lidAngle;
@@ -173,5 +205,22 @@ public abstract class TileEntityCustomChest extends TileEntityContainerBase impl
     public String getName() {
         return this.hasCustomName() ? this.customName : this.getDisplayName().getUnformattedText();
     }
+    
+	@Override
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+		this.markDirty();
+		this.sync();
+	}
+    
+    @Override
+    public boolean isLocked() {
+    	return this.locked;
+    }
+    
+	@Override
+	public ItemStackHandler getLockItemHandler() {
+		return this.lock;
+	}
 	
 }

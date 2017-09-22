@@ -75,13 +75,13 @@ public final class RegistryHelper {
 		}
 	}
 	
-	public static void registerRenders(IHexianItemList[] items) {
+	public static void registerRenders(IHexianItemList... items) {
 		for(IHexianItemList i : items) {
 			i.getHexianItem().registerRender();
 		}
 	}
 	
-	public static void registerOreDict(IHexianBlockList[] blocks) {
+	public static void registerOreDict(IHexianBlockList... blocks) {
 		for(IHexianBlockList b : blocks) {
 			b.getHexianBlock().registerOreDict();
 		}

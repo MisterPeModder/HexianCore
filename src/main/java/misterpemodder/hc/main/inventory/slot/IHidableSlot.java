@@ -1,10 +1,10 @@
 package misterpemodder.hc.main.inventory.slot;
 
 /**
- * Represents an inventory slot that can be enabled/disabled.
+ * Represents an inventory slot that can be hidden.
  */
 public interface IHidableSlot {
 	
-	public void setEnabled(boolean enabled);
+	public void setVisible(boolean enabled);
 	
 }

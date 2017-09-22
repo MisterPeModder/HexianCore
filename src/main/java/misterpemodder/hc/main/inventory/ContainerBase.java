@@ -1,6 +1,7 @@
 package misterpemodder.hc.main.inventory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -20,7 +21,7 @@ import misterpemodder.hc.main.client.gui.tabs.TabBase;
 import misterpemodder.hc.main.inventory.elements.ISyncedContainerElement;
 import misterpemodder.hc.main.inventory.slot.IHidableSlot;
 import misterpemodder.hc.main.inventory.slot.SlotFiltered;
-import misterpemodder.hc.main.inventory.slot.SlotHidable;
+import misterpemodder.hc.main.inventory.slot.SlotDisableable;
 import misterpemodder.hc.main.inventory.slot.SlotHidableInventory;
 import misterpemodder.hc.main.inventory.slot.SlotHidableInventory.SlotHidableCrafting;
 import misterpemodder.hc.main.network.packet.PacketHandler;
@@ -80,17 +81,23 @@ public abstract class ContainerBase<TE extends TileEntityContainerBase> extends 
 			this.playerArmorInv = new PlayerArmorInvWrapper(playerInv);
 		}
 		
-		setPlayerInvSlots(hasArmorTab);
-		setLockSlot();
-		setTeSlots(te);
-		setCraftingSlots(hasArmorTab);
-		setExtraInvSlots();
-		
+		setSlots(hasArmorTab);
 		hideSlots();
 		
 		ImmutableList.Builder<ISyncedContainerElement> builder = new ImmutableList.Builder<>();
 		builder.addAll(addContainerElements(new ArrayList<>()));
 		this.containerElements = builder.build();
+	}
+	
+	protected void setSlots(boolean hasArmorTab) {
+		setPlayerInvSlots(hasArmorTab);
+		setLockSlot(true);
+		setTeSlots(te);
+		
+		if(hasArmorTab) {			
+			setCraftingSlots(true);
+			setBaubleSlots(true);
+		}
 	}
 	
 	public ImmutablePair<TabBase<?, ?>, TabBase<?, ?>> getSelectedTabs() {
@@ -106,14 +113,14 @@ public abstract class ContainerBase<TE extends TileEntityContainerBase> extends 
 			if(sl instanceof IHidableSlot) {
 				IHidableSlot slot = (IHidableSlot) sl;
 				if(selectedTabs.getLeft() != null && selectedTabs.getRight() != null) {
-					slot.setEnabled(selectedTabs.getLeft().shouldDisplaySlot(slot) || selectedTabs.getRight().shouldDisplaySlot(slot));
+					slot.setVisible(selectedTabs.getLeft().shouldDisplaySlot(slot) || selectedTabs.getRight().shouldDisplaySlot(slot));
 				} else if(getDefaultSlotIndexes().contains(sl.slotNumber)){
-					slot.setEnabled(true);
-				} else if(slot instanceof SlotHidable) {
-					IItemHandler h = ((SlotHidable)slot).getItemHandler();
-					slot.setEnabled(h == te.getInventory() || h == playerMainInv);
+					slot.setVisible(true);
+				} else if(slot instanceof SlotDisableable) {
+					IItemHandler h = ((SlotDisableable)slot).getItemHandler();
+					slot.setVisible(h == te.getInventory() || h == playerMainInv);
 				} else {
-					slot.setEnabled(false);
+					slot.setVisible(false);
 				}
 			}
 		}
@@ -142,7 +149,9 @@ public abstract class ContainerBase<TE extends TileEntityContainerBase> extends 
 	
 	protected abstract void setTeSlots(TE te);
 	
-	protected abstract List<Integer> getDefaultSlotIndexes();
+	protected List<Integer> getDefaultSlotIndexes() {
+		return Collections.EMPTY_LIST;
+	}
 	
 	/**
 	 * Use this method to add synced container elements to the list.
@@ -166,13 +175,13 @@ public abstract class ContainerBase<TE extends TileEntityContainerBase> extends 
 		//Main Inventory
 	    for (int y = 0; y < 3; ++y) {
 	        for (int x = 0; x < 9; ++x) {
-	            this.addSlotToContainer(new SlotHidable(playerMainInv, x + y * 9 + 9, 26 + x * 18, BPART_OFFSET+18 + y * 18, true));
+	            this.addSlotToContainer(new SlotDisableable(playerMainInv, x + y * 9 + 9, 26 + x * 18, BPART_OFFSET+18 + y * 18, true));
 	        }
 	    }
 	 
 	    //Hotbar
 	    for (int x = 0; x < 9; ++x) {
-	        this.addSlotToContainer(new SlotHidable(playerMainInv, x, 26 + x * 18, BPART_OFFSET+76, true));
+	        this.addSlotToContainer(new SlotDisableable(playerMainInv, x, 26 + x * 18, BPART_OFFSET+76, true));
 	    }
 	    
 	    if(hasArmorTab) {
@@ -191,48 +200,42 @@ public abstract class ContainerBase<TE extends TileEntityContainerBase> extends 
 	    
 	    	//Offhand
 	    	int o = isBaublesCompatEnabled()? 19 : 0;
-	    	Slot slot = new SlotHidable(playerOffhandInv, 0, 83+o, BPART_OFFSET+69, true);
+	    	Slot slot = new SlotDisableable(playerOffhandInv, 0, 83+o, BPART_OFFSET+69, true);
 	    	slot.setBackgroundName("minecraft:items/empty_armor_slot_shield");
 	    	this.addSlotToContainer(slot);
 		}
 	}
 	
-	protected void setCraftingSlots(boolean hasArmorTab) {
-		if(hasArmorTab) {
-			craftMatrix = new InventoryCrafting(this, 3, 3);
-			craftResult = new InventoryCraftResult();
+	protected void setCraftingSlots(boolean enabled) {
+		craftMatrix = new InventoryCrafting(this, 3, 3);
+		craftResult = new InventoryCraftResult();
 			
-			this.addSlotToContainer(new SlotHidableCrafting(playerMainInv.getInventoryPlayer().player, this.craftMatrix, this.craftResult, 0, 181, BPART_OFFSET+75));
+		this.addSlotToContainer(new SlotHidableCrafting(playerMainInv.getInventoryPlayer().player, this.craftMatrix, this.craftResult, 0, 181, BPART_OFFSET+75, enabled));
 
-	        for (int y = 0; y < 3; ++y) {
-	            for (int x = 0; x < 3; ++x) {
-	                this.addSlotToContainer(new SlotHidableInventory(this.craftMatrix, x + y * 3, 149 + x * 18, BPART_OFFSET+15 + y * 18));
-	            }
-	        }
-	        
-	        if(isBaublesCompatEnabled()) {
-				baublesInv = BaublesApi.getBaublesHandler(player);
-				for (int x = 0; x < 2; ++x) {
-					for (int y = 0; y < 4; ++y) {
-		            	if(y == 3 && x == 1) break;
-		                this.addSlotToContainer(new SlotHidable(this.baublesInv, y + x * 4, 83 + x * 19, BPART_OFFSET+15 + y * 18, true));
-		            }
-		        }
+		for (int y = 0; y < 3; ++y)
+			for (int x = 0; x < 3; ++x)
+				this.addSlotToContainer(new SlotHidableInventory(this.craftMatrix, x + y * 3, 149 + x * 18, BPART_OFFSET + 15 + y * 18, enabled));
+	}
+	
+	protected void setBaubleSlots(boolean enabled) {
+		if(isBaublesCompatEnabled()) {
+			baublesInv = BaublesApi.getBaublesHandler(player);
+			for (int x = 0; x < 2; ++x) {
+				for (int y = 0; y < 4; ++y) {
+					if (y == 3 && x == 1)
+						break;
+					this.addSlotToContainer(new SlotDisableable(this.baublesInv, y + x * 4, 83 + x * 19, BPART_OFFSET + 15 + y * 18, true, enabled));
+				}
 			}
-	        
-	        this.onCraftMatrixChanged(this.craftMatrix);
 		}
 	}
 	
-	protected void setLockSlot() {
+	protected void setLockSlot(boolean enabled) {
 		if(this.te instanceof ILockable) {
-			Predicate<ItemStack> lockTest = new Predicate<ItemStack>() {
-				public boolean apply(ItemStack stack) {
-					return stack.getItem() instanceof IItemLock;
-				}
-			};
+			Predicate<ItemStack> lockTest = stack -> stack.getItem() instanceof IItemLock;
+			
 			final ILockable lockable = (ILockable) this.te;
-			SlotFiltered ls = new SlotFiltered(lockable.getLockItemHandler(), 0, 8, 18, true, lockTest) {
+			SlotFiltered ls = new SlotFiltered(lockable.getLockItemHandler(), 0, 8, 18, true, enabled, lockTest) {
 				@Override
 				public ItemStack onTake(EntityPlayer thePlayer, ItemStack stack) {
 					lockable.setLocked(false);
@@ -243,13 +246,30 @@ public abstract class ContainerBase<TE extends TileEntityContainerBase> extends 
 		}
 	}
 	
-	//override this to add extra slots
-	protected void setExtraInvSlots() {
-	}
+	/**
+	 * Tries to merge stack with the main inventory of this container or the player inv.
+	 * 
+	 * @param stack - The stack
+	 * @return true if the merge is complete, 
+	 * false if the stack was not fully merged.
+	 */
+	protected abstract boolean mergeItemStackMainInv(ItemStack stack);
 	
 	@Override
 	public void onContainerClosed(EntityPlayer playerIn) {
 		te.onInvClose(playerIn);
+		
+        for (int i = 0; i < 9; ++i) {
+            ItemStack itemstack = this.craftMatrix.removeStackFromSlot(i);
+            if (!itemstack.isEmpty()) {
+            	if (!this.mergeItemStackMainInv(itemstack)) {
+            		playerIn.dropItem(itemstack, false);
+            	}
+            }
+        }
+
+        this.craftResult.setInventorySlotContents(0, ItemStack.EMPTY);
+		
         super.onContainerClosed(playerIn);
 	}
 	
