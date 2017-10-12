@@ -16,7 +16,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "1.11.2-1.1.0"
 group = "misterpemodder.hc"
-archivesBaseName = "hc"
+archivesBaseName = "HexianCore"
 
 sourceCompatibility = targetCompatibility = "1.8"
 compileJava {
@@ -85,6 +85,11 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
+}
+
 curseforge {
   apiKey = project.hasProperty('curseForgeApiKey') ? project.curseForgeApiKey : ''
   
@@ -112,6 +117,12 @@ curseforge {
     
     addArtifact (sourcesJar) {
     	changelog = 'Source jar for HexianCore ${project.version}.'
+    	releaseType = 'release'
+    	displayName = "HexianCore-${project.mc_version}-${project.version}-source"
+    }
+	
+	addArtifact (deobfJar) {
+    	changelog = 'Deofuscated dev jar for HexianCore ${project.version}.'
     	releaseType = 'release'
     	displayName = "HexianCore-${project.mc_version}-${project.version}-source"
     }

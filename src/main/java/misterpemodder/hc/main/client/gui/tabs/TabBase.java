@@ -47,7 +47,7 @@ public abstract class TabBase<C extends ContainerBase<TE>, TE extends TileEntity
 	protected TabPos pos;
 	protected GuiContainerBase<C, TE> guiContainer;
 	protected List<GuiButton> buttons;
-	private boolean enabled;
+	private boolean enabled = true;
 	
 	protected TabBase(TabPos pos) {
 		this.pos = pos;

@@ -174,11 +174,9 @@ public abstract class GuiContainerBase<C extends ContainerBase<TE>, TE extends T
 		    RenderHelper.disableStandardItemLighting();
 		    if(isPointInRegion(tab.getPos().x+1, tab.getPos().y, TabBase.WIDTH, TabBase.HEIGHT-1, mouseX, mouseY)) {
 		    	flag = false;
-		    	addHoveringText(TextFormatting.GRAY + "" + TextFormatting.ITALIC + StringUtils.translate(tab.getUnlocalizedName()));
+		    	addHoveringText((tab.isEnabled()? "" : TextFormatting.GRAY + "" + TextFormatting.ITALIC) + StringUtils.translate(tab.getUnlocalizedName()));
 		    }
 	    }
-	    
-	    
 	    
 	    if(flag && JEICompat.isModLoaded()) {
 	    	List<RecipeClickableAreaHC> list = getRecipeClickableAreas();
@@ -229,7 +227,7 @@ public abstract class GuiContainerBase<C extends ContainerBase<TE>, TE extends T
 					this.container.hideSlots();
 
 				}
-			} else if(JEIPluginHC.hasJEIRuntime()) {
+			} else if(JEICompat.isModLoaded() && JEIPluginHC.hasJEIRuntime()) {
 		    	List<RecipeClickableAreaHC> list = getRecipeClickableAreas();
 		    	for(RecipeClickableAreaHC r : list) {
 		    		if(r.checkHover(mouseX, mouseY)) {

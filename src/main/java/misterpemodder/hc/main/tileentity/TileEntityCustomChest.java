@@ -11,16 +11,12 @@ import misterpemodder.hc.main.blocks.properties.IWorldNameableModifiable;
 import misterpemodder.hc.main.capabilty.item.ItemStackHandlerLockable;
 import misterpemodder.hc.main.capabilty.item.SyncedItemHandler;
 import misterpemodder.hc.main.network.packet.PacketHandler;
-import misterpemodder.hc.main.utils.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -75,6 +71,7 @@ public abstract class TileEntityCustomChest extends TileEntityContainerBase impl
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setTag("inventory", inventory.serializeNBT());
+		compound.setTag("lock", lock.serializeNBT());
 		compound.setTag("owner", ownerHandler.serializeNBT());
 		compound.setBoolean("locked", locked);
 		
@@ -87,6 +84,7 @@ public abstract class TileEntityCustomChest extends TileEntityContainerBase impl
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		this.inventory.deserializeNBT(compound.getCompoundTag("inventory"));
+		this.lock.deserializeNBT(compound.getCompoundTag("lock"));
 		this.ownerHandler.deserializeNBT(compound.getCompoundTag("owner"));
 		this.locked = compound.getBoolean("locked");
 		
@@ -126,11 +124,6 @@ public abstract class TileEntityCustomChest extends TileEntityContainerBase impl
 	}
 	
 	@Override
-	public ITextComponent getDisplayName() {
-		return new TextComponentString(TextFormatting.getTextWithoutFormattingCodes(StringUtils.translate("tile.blockTitaniumChest.name")));
-	}
-	
-	@Override
 	public boolean canRenderBreaking() {
 	     return true;
 	}
@@ -148,9 +141,7 @@ public abstract class TileEntityCustomChest extends TileEntityContainerBase impl
 	
 	@Override
 	public void update() {
-        
 		if (this.world.isRemote) {
-			
 			if(ticksSinceUpdate >= MAX_UPDATE_TIME) {
 				ticksSinceUpdate = 0;
 				this.sync();
@@ -189,11 +180,11 @@ public abstract class TileEntityCustomChest extends TileEntityContainerBase impl
 				}
 			}
 		}
-    }
+	}
 	
 	@Override
 	public boolean hasCustomName() {
-        return this.customName != null && !this.customName.isEmpty();
+		return this.customName != null && !this.customName.isEmpty();
     }
 	
 	@Override

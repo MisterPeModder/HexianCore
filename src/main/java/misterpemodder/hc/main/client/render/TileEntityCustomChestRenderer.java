@@ -73,7 +73,7 @@ public abstract class TileEntityCustomChestRenderer<TE extends TileEntityCustomC
         model.chestLid.rotateAngleX = -(f * ((float)Math.PI / 2F));
         model.renderAll();
         
-        if(!te.getLockItemHandler().getStackInSlot(0).isEmpty() && destroyStage < 0) {
+        if(f== 0 && !te.getLockItemHandler().getStackInSlot(0).isEmpty() && destroyStage < 0) {
         	
             GlStateManager.disableLighting();
             GlStateManager.pushAttrib();

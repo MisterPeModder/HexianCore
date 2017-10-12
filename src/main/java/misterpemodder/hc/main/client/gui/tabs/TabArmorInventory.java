@@ -73,7 +73,7 @@ public class TabArmorInventory<C extends ContainerBase<TE>, TE extends TileEntit
 	@Override
 	public TabTexture getTabTexture() {
 		String str = getContainer().isBaublesCompatEnabled()? "textures/gui/container/armor_inventory_baubles.png" : "textures/gui/container/armor_inventory.png";
-		return new TabTexture(DEFAULT_TAB_LOCATION, new Point(0,56), new Point(32, 56), new ResourceLocationHC(str), new Dimension(212, 100));
+		return new TabTexture(DEFAULT_TAB_LOCATION, new Point(0, 28), new Point(32, 28), new ResourceLocationHC(str), new Dimension(212, 100));
 	}
 	
 	@Override

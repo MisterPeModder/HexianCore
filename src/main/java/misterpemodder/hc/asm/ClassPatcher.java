@@ -83,9 +83,9 @@ public abstract class ClassPatcher {
 			}
 	        
 			try {
-				logger.info(className+" patching complete!");
 		        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 		        classNode.accept(writer);
+		        logger.info(className+" patching complete!");
 		        return writer.toByteArray();
 			} catch(Throwable t) {
 				t.printStackTrace();
